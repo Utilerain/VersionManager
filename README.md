@@ -1,4 +1,4 @@
-<table><tr width=64px><td><img src="https://github.com/Utilerain/VersionManager/blob/main/icon.svg"height="128px"></td><td><h1>VersionManager</h1></td></tr></table>
+<table><tr width=64px><td><img src="https://github.com/Utilerain/VersionManager/blob/master/icon.svg"height="128px"></td><td><h1>VersionManager</h1></td></tr></table>
 
 A version manager for Godot game engine
 
