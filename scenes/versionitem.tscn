@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://55gvqacskphc"]
+
+[ext_resource type="Script" path="res://scripts/components/versionitem.gd" id="1_mneb5"]
+[ext_resource type="Texture2D" uid="uid://b1t5hw75jscbx" path="res://resources/logo_engines/default.png" id="2_5kcoa"]
+[ext_resource type="FontFile" uid="uid://bkjq1viggpkm0" path="res://fonts/Roboto/Roboto-Light.ttf" id="2_e561a"]
+
+[sub_resource type="Theme" id="Theme_a78os"]
+Label/font_sizes/font_size = 14
+Label/fonts/font = ExtResource("2_e561a")
+
+[node name="Item" type="Button"]
+custom_minimum_size = Vector2(0, 80)
+offset_right = 622.0
+offset_bottom = 80.0
+size_flags_vertical = 2
+script = ExtResource("1_mneb5")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_5kcoa")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="EngineVerName" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Engine name"
+vertical_alignment = 1
+
+[node name="CurrentVersion" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_a78os")
+text = "Version"
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]
