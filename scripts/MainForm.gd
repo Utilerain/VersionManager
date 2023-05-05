@@ -222,21 +222,26 @@ func _on_add_engine_pressed():
 	addenginepopup.show()
 
 #saves changes and closes program
-func _on_tree_exiting():
+func _exit_tree():
 	verdb.write_is_cat($"cat???".visible)
 	verdb.write_default_path(default_version_path)
 	verdb.write_version_items(get_node("./MainBox/ScrollBox/ListVersions"))
+	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.json):
+		
+		print("Nothing changes, closing program")
+		return
 	verdb.save_and_close()
 
-#removes engine with directories
+#removes engine with directories (not custom_build version)
 func _on_delete_engine_pressed():
-	var temp = sender_item.Path.split("/")
-	temp.remove_at(len(temp)-1)
-	
-	if "mono" in sender_item.Version:
+	if not "custom_build" in sender_item.Version:
+		var temp = sender_item.Path.split("/")
 		temp.remove_at(len(temp)-1)
-	
-	delete_directory("/".join(temp))
+		
+		if "mono" in sender_item.Version:
+			temp.remove_at(len(temp)-1)
+		
+		delete_directory("/".join(temp))
 	
 	listVersion.remove_child(sender_item)
 	engineMenu.visible = false
@@ -340,3 +345,47 @@ func _on_save_pressed():
 func _on_link_customengine_pressed():
 	addenginepopup.hide()
 	addcustomenginepopup.show()
+
+
+func load_custom_build(version, type, path, custom_name="Godot engine custom", custom_icon=ImageLoader.load("res://resources/logo_engines/default.png"), monosupport=false):
+	var ver_item = load("res://scenes/versionitem.tscn").instantiate() #versionitem for version list
+	var mono = ""
+	var count = 0
+
+	
+	if custom_name == "":
+		custom_name = "Godot engine custom"
+		
+	
+	for item in listVersion.get_children():
+		
+		if custom_name in item.Name: #if name of engine has same name of other engine
+			count += 1
+			continue
+	
+	if count > 0:
+		custom_name += "(%s)" % count
+	
+	
+	if monosupport:
+		mono = "_mono"
+	
+	ver_item.Name = custom_name
+	ver_item.Icon = custom_icon
+	ver_item.Path = path
+	ver_item.Version = version + type + mono + ".custom_build"
+	
+	ver_item.connect("button_pressed", self._on_item_selected)
+	listVersion.add_child(ver_item)
+	
+
+
+
+
+
+
+
+
+
+
+

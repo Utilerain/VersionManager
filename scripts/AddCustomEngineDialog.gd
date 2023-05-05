@@ -2,19 +2,21 @@ extends Window
 
 const url = "https://downloads.tuxfamily.org/godotengine/" #url for searching godot versions
 
-@onready var versionselect = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VersionContainer/VersionSelect
-@onready var typeselect = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TypeContainer/TypeSelect
-@onready var icondialog = $IconDialog
-@onready var filedialog = $FileDialog
-@onready var customname = $MarginContainer/VBoxContainer/MainInfoContainer/NameContainer/Name
-@onready var customicon = $MarginContainer/VBoxContainer/MainInfoContainer/icon
-@onready var monosupport = $MarginContainer/VBoxContainer/HBoxContainer/MonoSupport
+@onready var versionselect := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VersionContainer/VersionSelect
+@onready var typeselect := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TypeContainer/TypeSelect
+@onready var icondialog := $IconDialog
+@onready var filedialog := $FileDialog
+@onready var customname := $MarginContainer/VBoxContainer/MainInfoContainer/NameContainer/Name
+@onready var customicon := $MarginContainer/VBoxContainer/MainInfoContainer/icon
+@onready var monosupport := $MarginContainer/VBoxContainer/HBoxContainer/MonoSupport
+@onready var path := $MarginContainer/VBoxContainer/MainInfoContainer/NameContainer/PathContainer/Path
 
 var typelist
 var versionlist
 var selected_type = "stable"
 var selected_version
 var current_url
+
 
 func _ready():
 	$Req.connect("request_completed", self._on_request_completed)
@@ -60,4 +62,27 @@ func _on_version_select_item_selected(index):
 func _on_type_select_item_selected(index):
 	selected_type = typelist[index]
 
+#starts load_custom process
+func _on_load_button_pressed():
+	if selected_version == null:
+		OS.alert("You're not selected version", "Warning!")
+		return
+	var mainform = get_node("/root/MainForm")
+	hide()
+	mainform.load_custom_build(selected_version, selected_type, path.text, customname.text,  customicon.icon, monosupport.button_pressed)
 
+
+func _on_icon_pressed():
+	icondialog.show()
+
+
+func _on_icon_dialog_file_selected(path):
+	customicon.icon = ImageLoader.load(path)
+
+
+func _on_file_pressed():
+	filedialog.show()
+	
+	
+func _on_file_selected(path):
+	self.path.text = path

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b0ma5dg84d2me"]
+[gd_scene load_steps=23 format=3 uid="uid://b0ma5dg84d2me"]
 
 [ext_resource type="FontFile" uid="uid://unjqya4f4q2p" path="res://fonts/Roboto/Roboto-Regular.ttf" id="1_dehqn"]
 [ext_resource type="Script" path="res://scripts/MainForm.gd" id="2_2tbci"]
@@ -56,6 +56,8 @@ Window/styles/embedded_border = SubResource("StyleBoxFlat_agx1h")
 default_font = ExtResource("7_538qu")
 default_font_size = 20
 Label/fonts/font = ExtResource("7_538qu")
+
+[sub_resource type="Theme" id="Theme_3praf"]
 
 [node name="MainForm" type="Control"]
 clip_contents = true
@@ -530,13 +532,16 @@ size = Vector2i(767, 455)
 ok_button_text = "Открыть"
 file_mode = 0
 access = 2
-filters = PackedStringArray("*.exe", "*.x86_64", "*.x86_32")
+filters = PackedStringArray("*.exe", "*.64", "*.32", "*.x86_64", "*.x86_32")
 show_hidden_files = true
 
 [node name="AddCustomEngineDialog" type="Window" parent="."]
+title = "Add custom engine"
 position = Vector2i(378, 171)
 size = Vector2i(437, 243)
+visible = false
 unresizable = true
+theme = SubResource("Theme_3praf")
 script = ExtResource("16_bojxu")
 
 [node name="MarginContainer" type="MarginContainer" parent="AddCustomEngineDialog"]
@@ -625,6 +630,7 @@ layout_mode = 2
 
 [node name="MonoSupport" type="CheckButton" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "C# (.NET) support"
 
 [node name="Load" type="Button" parent="AddCustomEngineDialog/MarginContainer"]
@@ -634,13 +640,23 @@ size_flags_vertical = 8
 text = "load custom build"
 
 [node name="IconDialog" type="FileDialog" parent="AddCustomEngineDialog"]
+title = "Open a File"
 position = Vector2i(200, 92)
 size = Vector2i(789, 503)
+ok_button_text = "Открыть"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png", "*.jpg", "*.jpeg", "*.svg")
 show_hidden_files = true
 
 [node name="FileDialog" type="FileDialog" parent="AddCustomEngineDialog"]
+title = "Open a File"
 position = Vector2i(228, 147)
 size = Vector2i(685, 439)
+ok_button_text = "Открыть"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.exe", "*.32", "*.64", "*.x86_32", "*.x86_64")
 show_hidden_files = true
 
 [node name="Req" type="HTTPRequest" parent="AddCustomEngineDialog"]
@@ -655,7 +671,6 @@ access = 2
 filters = PackedStringArray("*.png", "*.jpg", "*.svg", "*.jpeg")
 show_hidden_files = true
 
-[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
 [connection signal="pressed" from="HeadBar/BarBg/Bar/AddEngine" to="." method="_on_add_engine_pressed"]
 [connection signal="pressed" from="HeadBar/BarBg/Bar/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="HeadBar/BarBg/Bar/About" to="." method="_on_about_pressed"]
@@ -685,6 +700,11 @@ show_hidden_files = true
 [connection signal="pressed" from="SettingsForEngineDialog/MarginContainer/VBoxContainer/Save" to="." method="_on_save_pressed"]
 [connection signal="file_selected" from="SettingsForEngineDialog/FileDialog" to="SettingsForEngineDialog" method="_on_file_dialog_file_selected"]
 [connection signal="close_requested" from="AddCustomEngineDialog" to="AddCustomEngineDialog" method="_on_close_requested"]
+[connection signal="pressed" from="AddCustomEngineDialog/MarginContainer/VBoxContainer/MainInfoContainer/icon" to="AddCustomEngineDialog" method="_on_icon_pressed"]
+[connection signal="pressed" from="AddCustomEngineDialog/MarginContainer/VBoxContainer/MainInfoContainer/NameContainer/PathContainer/File" to="AddCustomEngineDialog" method="_on_file_pressed"]
 [connection signal="item_selected" from="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VersionContainer/VersionSelect" to="AddCustomEngineDialog" method="_on_version_select_item_selected"]
 [connection signal="item_selected" from="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TypeContainer/TypeSelect" to="AddCustomEngineDialog" method="_on_type_select_item_selected"]
+[connection signal="pressed" from="AddCustomEngineDialog/MarginContainer/Load" to="AddCustomEngineDialog" method="_on_load_button_pressed"]
+[connection signal="file_selected" from="AddCustomEngineDialog/IconDialog" to="AddCustomEngineDialog" method="_on_icon_dialog_file_selected"]
+[connection signal="file_selected" from="AddCustomEngineDialog/FileDialog" to="AddCustomEngineDialog" method="_on_file_selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

@@ -12,6 +12,7 @@ config_version=5
 
 config/name="Version Manager"
 run/main_scene="res://scenes/MainForm.tscn"
+config/use_custom_user_dir=true
 config/custom_user_dir_name="VersionManager"
 config/features=PackedStringArray("4.0", "C#", "GL Compatibility")
 run/low_processor_mode=true
