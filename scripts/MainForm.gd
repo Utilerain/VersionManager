@@ -378,14 +378,3 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	ver_item.connect("button_pressed", self._on_item_selected)
 	listVersion.add_child(ver_item)
 	
-
-
-
-
-
-
-
-
-
-
-
