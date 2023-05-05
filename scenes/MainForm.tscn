@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b0ma5dg84d2me"]
+[gd_scene load_steps=22 format=3 uid="uid://b0ma5dg84d2me"]
 
 [ext_resource type="FontFile" uid="uid://unjqya4f4q2p" path="res://fonts/Roboto/Roboto-Regular.ttf" id="1_dehqn"]
 [ext_resource type="Script" path="res://scripts/MainForm.gd" id="2_2tbci"]
@@ -25,11 +25,30 @@ content_margin_bottom = 0.0
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
 corner_detail = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_agx1h"]
+content_margin_left = 10.0
+content_margin_top = 28.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.172549, 0.176471, 0.27451, 0.733333)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 5
+expand_margin_left = 8.0
+expand_margin_top = 32.0
+expand_margin_right = 8.0
+expand_margin_bottom = 6.0
+shadow_size = 5
+anti_aliasing_size = 0.01
+
 [sub_resource type="Theme" id="Theme_061mn"]
 default_font = ExtResource("1_dehqn")
 Button/font_sizes/font_size = 14
 Label/fonts/font = ExtResource("1_dehqn")
 Panel/styles/panel = SubResource("StyleBoxFlat_exu33")
+Window/styles/embedded_border = SubResource("StyleBoxFlat_agx1h")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0mb64"]
 
@@ -222,6 +241,7 @@ title = "Add engine"
 position = Vector2i(353, 193)
 size = Vector2i(398, 264)
 visible = false
+unresizable = true
 min_size = Vector2i(398, 264)
 max_size = Vector2i(398, 264)
 script = ExtResource("10_1k1oa")
@@ -332,6 +352,7 @@ title = "Settings"
 position = Vector2i(326, 174)
 size = Vector2i(612, 335)
 visible = false
+unresizable = true
 min_size = Vector2i(612, 335)
 max_size = Vector2i(612, 335)
 script = ExtResource("11_02lsr")
@@ -397,6 +418,7 @@ title = "About"
 position = Vector2i(375, 141)
 size = Vector2i(484, 407)
 visible = false
+unresizable = true
 min_size = Vector2i(484, 407)
 max_size = Vector2i(484, 407)
 script = ExtResource("13_ce5ff")
@@ -438,6 +460,7 @@ title = "SettingsforengineDialog"
 position = Vector2i(405, 186)
 size = Vector2i(440, 166)
 visible = false
+unresizable = true
 min_size = Vector2i(440, 166)
 max_size = Vector2i(440, 166)
 script = ExtResource("14_dkecv")
@@ -511,8 +534,9 @@ filters = PackedStringArray("*.exe", "*.x86_64", "*.x86_32")
 show_hidden_files = true
 
 [node name="AddCustomEngineDialog" type="Window" parent="."]
-position = Vector2i(279, 171)
-size = Vector2i(591, 369)
+position = Vector2i(378, 171)
+size = Vector2i(437, 243)
+unresizable = true
 script = ExtResource("16_bojxu")
 
 [node name="MarginContainer" type="MarginContainer" parent="AddCustomEngineDialog"]
@@ -570,21 +594,56 @@ placeholder_text = "Your path"
 layout_mode = 2
 icon = ExtResource("11_2dc4a")
 
-[node name="VersionContainer" type="HBoxContainer" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/VersionContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="VersionContainer" type="HBoxContainer" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VersionContainer"]
 layout_mode = 2
 text = "Version:"
 
-[node name="OptionButton" type="OptionButton" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/VersionContainer"]
+[node name="VersionSelect" type="OptionButton" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VersionContainer"]
 custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
 
-[node name="FileDialog" type="FileDialog" parent="AddCustomEngineDialog"]
+[node name="TypeContainer" type="HBoxContainer" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TypeContainer"]
+layout_mode = 2
+text = "Type:     "
+
+[node name="TypeSelect" type="OptionButton" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TypeContainer"]
+custom_minimum_size = Vector2(125, 0)
+layout_mode = 2
+
+[node name="MonoSupport" type="CheckButton" parent="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "C# (.NET) support"
+
+[node name="Load" type="Button" parent="AddCustomEngineDialog/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "load custom build"
+
+[node name="IconDialog" type="FileDialog" parent="AddCustomEngineDialog"]
 position = Vector2i(200, 92)
 size = Vector2i(789, 503)
 show_hidden_files = true
+
+[node name="FileDialog" type="FileDialog" parent="AddCustomEngineDialog"]
+position = Vector2i(228, 147)
+size = Vector2i(685, 439)
+show_hidden_files = true
+
+[node name="Req" type="HTTPRequest" parent="AddCustomEngineDialog"]
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
@@ -626,4 +685,6 @@ show_hidden_files = true
 [connection signal="pressed" from="SettingsForEngineDialog/MarginContainer/VBoxContainer/Save" to="." method="_on_save_pressed"]
 [connection signal="file_selected" from="SettingsForEngineDialog/FileDialog" to="SettingsForEngineDialog" method="_on_file_dialog_file_selected"]
 [connection signal="close_requested" from="AddCustomEngineDialog" to="AddCustomEngineDialog" method="_on_close_requested"]
+[connection signal="item_selected" from="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VersionContainer/VersionSelect" to="AddCustomEngineDialog" method="_on_version_select_item_selected"]
+[connection signal="item_selected" from="AddCustomEngineDialog/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TypeContainer/TypeSelect" to="AddCustomEngineDialog" method="_on_type_select_item_selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

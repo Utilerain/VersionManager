@@ -52,7 +52,7 @@ func _on_request_completed(_result, _response_code, _headers, body):
 
 #gets type of version: stable, alpha, beta, rc, dev
 func _on_verrequest_completed(_result, _response_code, _headers, body):
-	monosupport.disabled = check_mono(body)
+	monosupport.disabled = VersionScanner.check_mono(body)
 	monosupport.toggle_mode = not monosupport.disabled
 	
 	typeselect.clear()
@@ -77,11 +77,6 @@ func _on_version_select_item_selected(index):
 
 func _on_type_select_item_selected(index):
 	selected_type = typelist[index]
-
-#checks .NET support of current engine
-func check_mono(body):
-	regex.compile("(\\bmono\\b)")
-	return regex.search(body.get_string_from_utf8()) == null
 
 
 func _on_mono_support_toggled(button_pressed):

@@ -28,4 +28,10 @@ static func scan_type(body):
 			typelist.append(i.get_string())
 	
 	return typelist
-	
+
+#checks .NET support of current engine
+static func check_mono(body):
+	var regex = RegEx.new()
+	regex.compile("(\\bmono\\b)")
+	return regex.search(body.get_string_from_utf8()) == null
+
