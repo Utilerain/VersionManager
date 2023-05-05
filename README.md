@@ -12,6 +12,5 @@ Download and remove engines. Install custom icons to your engines. You can set t
 
 ## TODO:
 - [ ] MacOS support
-- [ ] Android support (may be a separate repository)
 - [ ] Code optimizing
 - [ ] Projects tab
