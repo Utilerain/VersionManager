@@ -4,6 +4,8 @@ A version manager for Godot game engine.
 
 Download and remove engines, add custom icon, add custom builds and you can set custom download directory.
 
+<img src="https://i.imgur.com/fWl0HpC.png">
+
 ## Build
 1. Install Godot engine 4.x with C# (.NET) support
 2. Project -> Export -> Choose your OS -> Export project
