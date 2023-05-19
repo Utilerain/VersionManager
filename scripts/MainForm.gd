@@ -24,42 +24,78 @@ var filename
 
 #initialize base functions
 func _ready():
+	
+	if OS.has_feature("debug"):
+		Logger.set_logger_level(Logger.LOG_LEVEL_DEBUG)
+		Logger.set_logger_format(Logger.LOG_FORMAT_FULL)
+		
+	else:
+		Logger.set_logger_level(Logger.LOG_LEVEL_INFO)
+		Logger.set_logger_format(Logger.LOG_FORMAT_MORE)
+	
+	Logger.info("initializing program")
+	
 	if not verdb.load_default_path() == "":
+		Logger.info("default_path is not empty. loading from file...")
 		default_version_path = verdb.load_default_path()
+		
+	Logger.info("loading version_items...")
 	verdb.load_version_items(get_node("./MainBox/ScrollBox/ListVersions"))
+	
+	Logger.info("loading cat...")
 	$"cat???".visible = verdb.load_cat()
+	
 	engineMenu.visible = false
-
+	
 	#if version list isn't clear
 	if listVersion.get_children() != null:
-		
+		Logger.info("list_version is not empty. connecting signal to items...")
 		for item in listVersion.get_children():
-			item.connect("button_pressed", self._on_item_selected)
+			item.button_pressed.connect(self._on_item_selected)
 
 #starts download progress of version
 func start_download_progress(version, type, platform, custom_name="Godot engine", custom_icon=ImageTexture.create_from_image(load("res://resources/logo_engines/default.png").get_image()), monosupport=false):
+	Logger.info("call downloading_progress")
 	addEngine.disabled = true
+	
+	Logger.info("instantiating versionitem.tscn...")
 	var ver_item = load("res://scenes/versionitem.tscn").instantiate() #versionitem for version list
-	regex.compile("Godot_v{version}(-|_){type}(_mono)?({platform})".format(
+	
+	
+	Logger.info("compiling regex...")
+	
+	var regex_compiled_string = "Godot_v{version}(-|_){type}(_mono)?({platform})".format(
 		{
 			"version": version,
 			"platform": platform,
 			"type": type
 		}
-	)) # compiles different godot version (Example: Godot_v3.5-stable_win64.exe.zip)
+	)
+	
+	regex.compile(regex_compiled_string) # compiles different godot version (Example: Godot_v3.5-stable_win64.exe.zip)
+	
+	Logger.info("regex compiling result: %s" % regex_compiled_string)
 	
 	if custom_name == "":
+		Logger.warn("custom_name is empty. using default name")
 		custom_name = "Godot engine"
 
 	if url == null:
+		Logger.info("url is null. creating new...")
+		
 		url = base_url + version 
 		
 		if type != "stable":
+			Logger.warn("type is not \"stable\"")
 			url += "/{type}".format({"type":type})
 		
 		if monosupport:
+			Logger.info("monosupport activated")
 			url += "/mono"
+		
+	Logger.info("url info: %s" % url)
 	
+	Logger.info("making directory at %s" % default_version_path)
 	DirAccess.make_dir_absolute(default_version_path)
 	var dir = DirAccess.open(default_version_path)
 	var count = 0
@@ -71,6 +107,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 			continue
 	
 	if count > 0:
+		Logger.warn("custom_name has duplicates. Renaming...")
 		custom_name += "(%s)" % count
 	
 	var is_mono = ""
@@ -78,6 +115,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 	if monosupport:
 		is_mono = "_mono"
 	
+	Logger.info("making directory recursive...")
 	dir.make_dir_recursive("{name}({version}{type}{mono})".format({
 		"name": custom_name,
 		"version": version,
@@ -86,7 +124,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 	}))
 
 	var req = HTTPRequest.new()
-	req.connect("request_completed", self._on_req_request_completed)
+	req.request_completed.connect(self._on_req_request_completed)
 	add_child(req)
 	
 	if filename:
@@ -94,7 +132,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 		if monosupport:
 			ver_item.Version += "_mono"
 		ver_item.Icon = custom_icon
-		ver_item.connect("button_pressed", self._on_item_selected)
+		ver_item.button_pressed.connect(self._on_item_selected)
 		listVersion.add_child(ver_item)
 		
 		filename = filename.format({
@@ -103,14 +141,19 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 		})
 		
 		req.download_file = filename
-		req.disconnect("request_completed", self._on_req_request_completed)
+		req.request_completed.disconnect(self._on_req_request_completed)
 	
 	else:
+		Logger.warn("can't found filename. recall function")
 		req.request(url, ["User-Agent: *"])
 		await req.request_completed
 		await start_download_progress(version, type, platform, custom_name, custom_icon, monosupport) #restarts function (recursive, bruh)
 		return
 	
+	Logger.info("versionitem info:\n	name: %s\n	version: %s" % [ver_item.Name, ver_item.Version])
+	Logger.info("filename info:\n	path: %s" % filename)
+	
+	Logger.info("start downloading...")
 	req.request(url, ["User-Agent: *"])
 	var divisor : float = 1024 * 1024
 	
@@ -119,13 +162,21 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 		ver_item.Name = "Downloading... [%.2f/%.2fMB]." % [req.get_downloaded_bytes() / divisor, req.get_body_size() / divisor]
 		await get_tree().create_timer(0.5).timeout
 	
+	Logger.info("extracting files...")
 	ver_item.Name = "Extracting..."
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.2).timeout
+	
+	Logger.info("loading unzipper.cs...")
 	var unzipper = load("res://scripts/CSharp/unzipper.cs")
 	var zipfile = unzipper.new()
+	
+	Logger.info("loading file")
 	zipfile.load(filename)
+	
+	Logger.info("extracting...")
 	await zipfile.extract()
 	ver_item.Name = custom_name
+	
 	
 	#configuration for extracting (not MacOs)
 	if not OS.has_feature("macos"):
@@ -168,12 +219,14 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 			ver_item.Path = "{path}/Godot.app/MacOS/Godot".format({"path":"/".join(temp)})
 		else:
 			ver_item.Path = "{path}/Godot_mono.app/MacOS/Godot".format({"path":"/".join(temp)})
-		
+	
+	Logger.info("clearing...")
 	DirAccess.remove_absolute(filename)
 	url = null
 	filename = ""
 	ver_item.disabled = false
 	addEngine.disabled = false
+	Logger.fine("succesfully created versionitem")
 
 #selects version from the list of versions
 func _on_item_selected(sender):
@@ -191,6 +244,7 @@ func _on_item_selected(sender):
 # if filename == null
 func _on_req_request_completed(_result, _response_code, _headers, body):
 	var list = []
+	Logger.info("searching using regex...")
 	var res = regex.search_all(body.get_string_from_utf8())
 	
 	for i in res:
@@ -202,9 +256,11 @@ func _on_req_request_completed(_result, _response_code, _headers, body):
 	
 	if len(list) > 1:
 		for i in list:
+			
 			if "64" in i and OS.get_environment("PROCESSOR_ARCHITECTURE").ends_with("64"):
 				current_arch = i
 				break
+				
 			current_arch = i
 	
 	url = url + "/%s" % current_arch
@@ -215,10 +271,12 @@ func _on_req_request_completed(_result, _response_code, _headers, body):
 
 
 func _on_settings_pressed():
+	Logger.info("showing settings_dialog")
 	settingspopup.show()
 
 
 func _on_add_engine_pressed():
+	Logger.info("showing add_engine_dialog")
 	addenginepopup.show()
 
 #saves changes and closes program
@@ -228,12 +286,15 @@ func _exit_tree():
 	verdb.write_version_items(get_node("./MainBox/ScrollBox/ListVersions"))
 	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.json):
 		
-		print("Nothing changes, closing program")
+		Logger.info("nothing changes in settings. closing program...")
 		return
+	
+	Logger.info("saving and closing program...")
 	verdb.save_and_close()
 
 #removes engine with directories (not custom_build version)
 func _on_delete_engine_pressed():
+	Logger.info("deleting engine...")
 	if not "custom_build" in sender_item.Version:
 		var temp = sender_item.Path.split("/")
 		temp.remove_at(len(temp)-1)
@@ -249,7 +310,7 @@ func _on_delete_engine_pressed():
 
 
 func _on_start_engine_pressed():
-	print("Started engine: %s %s" % [sender_item.Path, sender_item.Args])
+	Logger.info("started engine: %s %s" % [sender_item.Path, sender_item.Args])
 	await get_tree().create_timer(0.01).timeout
 	var output = []
 	
@@ -262,11 +323,10 @@ func _on_start_engine_pressed():
 		
 	thread.wait_to_finish()
 	thread = null
-	
-	print_debug(output)
 
 
 func _on_open_folder_engine_pressed():
+	Logger.info("Opening folder of the engine...")
 	var temp = sender_item.Path.split("/")
 	temp.remove_at(len(temp)-1)
 	OS.shell_open("/".join(temp))
@@ -287,7 +347,7 @@ func _on_file_dialog_file_selected(path):
 				i.Icon = sender_item.Icon
 				return
 	
-	push_warning("%s doesn't exist!" % path)
+	Logger.error("%s doesn't exist!" % path)
 
 #			／＞　 フ
 #		   | 　_　_| 
@@ -326,10 +386,10 @@ func delete_directory(path: String) -> void:
 		
 		dir = null
 		DirAccess.remove_absolute(path)
-		print("Succesfully deleted %s" % path)
+		Logger.info("Succesfully deleted %s" % path)
 		return
 	
-	push_warning("%s doesn't exist!" % path)
+	Logger.error("%s doesn't exist!" % path)
 
 
 func _on_settingsengine_pressed():
@@ -348,12 +408,16 @@ func _on_link_customengine_pressed():
 
 
 func load_custom_build(version, type, path, custom_name="Godot engine custom", custom_icon=ImageLoader.load("res://resources/logo_engines/default.png"), monosupport=false):
+	Logger.info("call load_suctom_build")
+	
+	Logger.info("instantiating versionitem.tscn...")
 	var ver_item = load("res://scenes/versionitem.tscn").instantiate() #versionitem for version list
 	var mono = ""
 	var count = 0
 
 	
 	if custom_name == "":
+		Logger.warn("custom_name is empty. changing to default")
 		custom_name = "Godot engine custom"
 		
 	
@@ -364,10 +428,12 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 			continue
 	
 	if count > 0:
+		Logger.warn("custom_name has duplicates. Renaming...")
 		custom_name += "(%s)" % count
 	
 	
 	if monosupport:
+		Logger.info("monosupport is true")
 		mono = "_mono"
 	
 	ver_item.Name = custom_name
@@ -375,6 +441,9 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	ver_item.Path = path
 	ver_item.Version = version + type + mono + ".custom_build"
 	
-	ver_item.connect("button_pressed", self._on_item_selected)
+	Logger.info("versionitem info:\n	name:%s\n	path:%s\n	version:%s" % [ver_item.Name, ver_item.Path, ver_item.Version])
+	
+	ver_item.button_pressed.connect(self._on_item_selected)
 	listVersion.add_child(ver_item)
+	Logger.fine("succesfully created versionitem")
 	

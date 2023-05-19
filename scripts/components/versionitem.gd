@@ -32,10 +32,12 @@ func _process(_delta):
 
 #sends itself as sender
 func _on_pressed():
+	Logger.debug("_on_pressed event")
 	button_pressed.emit(self)
 
 #gets JSON (dictionary) for settings.json
 func get_json():
+	Logger.info("call get_json")
 	return {
 		"name":Name,
 		"icon":ImageLoader.save_img($MarginContainer/HBoxContainer/icon.texture.get_image(), str("%s%s%s%s" % [Name, Version, Icon.get_width(), Icon.get_height()]).sha256_text() + ".png"),

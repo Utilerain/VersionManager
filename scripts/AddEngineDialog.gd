@@ -1,7 +1,5 @@
 extends Window
 
-const url = "https://downloads.tuxfamily.org/godotengine/" #url for searching godot versions
-
 const platforms = { 
 	"linux": {
 		"suffixes": "(_linux|_x11)(\\.|_)(x86_)?(64|32)\\.zip"
@@ -31,8 +29,8 @@ var current_url
 
 
 func _ready():
-	$Req.connect("request_completed", self._on_request_completed)
-	$Req.request(url)
+	$Req.request_completed.connect(self._on_request_completed)
+	$Req.request(V_utils.base_url)
 	
 	if OS.has_feature("windows"):
 		current_platform = "windows"
@@ -43,34 +41,34 @@ func _ready():
 
 
 func _on_request_completed(_result, _response_code, _headers, body):
-	versionlist = VersionScanner.scan_version(body)
+	versionlist = V_utils.scan_version(body)
 	for i in versionlist:
 		versionselect.add_item(i)
 	
-	$Req.connect("request_completed", self._on_verrequest_completed)
-	$Req.disconnect("request_completed", self._on_request_completed)
+	$Req.request_completed.connect(self._on_verrequest_completed)
+	$Req.request_completed.disconnect(self._on_request_completed)
 
 #gets type of version: stable, alpha, beta, rc, dev
 func _on_verrequest_completed(_result, _response_code, _headers, body):
-	monosupport.disabled = VersionScanner.check_mono(body)
+	monosupport.disabled = V_utils.check_mono(body)
 	monosupport.toggle_mode = not monosupport.disabled
 	
 	typeselect.clear()
 	
-	typelist = VersionScanner.scan_type(body)
+	typelist = V_utils.scan_type(body)
 	
 	for i in typelist:
 		typeselect.add_item(i)
 	
 	if len(typelist) < 1:
-		push_error("Can't find any types of version")
+		Logger.error("can't find any types of version: %s" % selected_version)
 		OS.alert("Can't find any types for this version. Select other")
 		return
 	selected_type = typelist[typeselect.selected]
 
 
 func _on_version_select_item_selected(index):
-	current_url = url + versionlist[index]
+	current_url = V_utils.base_url + versionlist[index]
 	selected_version = versionlist[index]
 	$Req.request(current_url)
 
@@ -81,15 +79,16 @@ func _on_type_select_item_selected(index):
 
 func _on_mono_support_toggled(button_pressed):
 	if button_pressed and not monosupport.disabled:
-		current_url = url + versionlist[versionselect.selected] + "/mono"
+		current_url = V_utils.base_url + versionlist[versionselect.selected] + "/mono"
 	else:
-		current_url = url + versionlist[versionselect.selected]
+		current_url = V_utils.base_url + versionlist[versionselect.selected]
 
 #starts download process
 func _on_download_button_pressed():
-	if selected_version == null:
-		OS.alert("You're not selected version", "Warning!")
+	var err = V_utils.check_version(selected_version)
+	if err == ERR_INVALID_DATA:
 		return
+	
 	var mainform = get_node("/root/MainForm")
 	thrd.start(mainform.start_download_progress.bind(selected_version, selected_type, platforms[current_platform]["suffixes"], customname.text, customicon.icon, monosupport.button_pressed))
 	hide()
