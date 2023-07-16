@@ -12,7 +12,6 @@ static func _read_img(direction : String) -> Image:
 	var file_exists := FileAccess.file_exists(path)
 	
 	if not file_exists:
-		Logger.error("Error loading image at -> " + path + " <- Please check that the image exists and the name is correct")
 		return null
 
 	var img  = Image.new()
@@ -30,7 +29,6 @@ static func save_img(img: Image, name: String = "image"):
 	var path = "user://cache/" + name
 	
 	if not FileAccess.file_exists(path):
-		Logger.info("Saving image at: %s" % path)
 		img.save_png(path)
 		
 	return path

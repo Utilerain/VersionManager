@@ -26,7 +26,6 @@ func _on_save_pressed():
 	if DirAccess.dir_exists_absolute(linever.text):
 		mainform.default_version_path = linever.text
 	else:
-		Logger.error("folder doesn't exist: %s" % [linever.text])
 		OS.alert("This folder doesn't exist. Did you make mistake?", "Warning!")
 	hide()
 

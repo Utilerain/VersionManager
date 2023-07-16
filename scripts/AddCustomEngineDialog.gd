@@ -48,7 +48,6 @@ func _on_verrequest_completed(_result, _response_code, _headers, body):
 		typeselect.add_item(i)
 	
 	if len(typelist) < 1:
-		Logger.error("can't find any types of version: %s" % selected_version)
 		OS.alert("Can't find any types for this version. Select other")
 		return
 	selected_type = typelist[typeselect.selected]
