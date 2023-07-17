@@ -44,7 +44,9 @@ func get_json():
 		"version":Version,
 		"args":Args
 	}
+	
 
-func _gui_input(event):
+func _on_gui_input(event):
 	if event is InputEventMouseButton and event.double_click:
+		print("event")
 		double_click.emit()

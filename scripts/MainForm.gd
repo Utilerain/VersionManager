@@ -18,7 +18,7 @@ const base_url = "https://downloads.tuxfamily.org/godotengine/"
 @onready var addEngine := $HeadBar/BarBg/Bar/AddEngine
 
 var default_version_path: String = ProjectSettings.globalize_path("user://versions")
-var sender_item
+var sender_item: VersionItem
 var url
 var filename
 
@@ -45,8 +45,6 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 	
 	var ver_item = load("res://scenes/versionitem.tscn").instantiate() #versionitem for version list
 	
-	
-	
 	var regex_compiled_string = "Godot_v{version}(-|_){type}(_mono)?({platform})".format(
 		{
 			"version": version,
@@ -57,13 +55,10 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 	
 	regex.compile(regex_compiled_string) # compiles different godot version (Example: Godot_v3.5-stable_win64.exe.zip)
 	
-	
 	if custom_name == "":
-
 		custom_name = "Godot engine"
 
 	if url == null:
-		
 		url = base_url + version 
 		
 		if type != "stable":
@@ -71,14 +66,12 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 		
 		if monosupport:
 			url += "/mono"
-		
 	
 	DirAccess.make_dir_absolute(default_version_path)
 	var dir = DirAccess.open(default_version_path)
 	var count = 0
 	
 	for item in listVersion.get_children():
-		
 		if custom_name in item.Name: #if name of engine has same name of other engine
 			count += 1
 			continue
