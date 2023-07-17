@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://b0ma5dg84d2me"]
+[gd_scene load_steps=24 format=3 uid="uid://b0ma5dg84d2me"]
 
 [ext_resource type="FontFile" uid="uid://unjqya4f4q2p" path="res://fonts/Roboto/Roboto-Regular.ttf" id="1_dehqn"]
 [ext_resource type="Script" path="res://scripts/MainForm.gd" id="2_2tbci"]
@@ -56,6 +56,9 @@ Window/styles/embedded_border = SubResource("StyleBoxFlat_agx1h")
 default_font = ExtResource("7_538qu")
 default_font_size = 20
 Label/fonts/font = ExtResource("7_538qu")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7xvan"]
+bg_color = Color(0.141176, 0.247059, 0.388235, 0.490196)
 
 [sub_resource type="Theme" id="Theme_3praf"]
 
@@ -227,16 +230,56 @@ offset_left = 250.0
 offset_top = 58.0
 metadata/_edit_use_anchors_ = true
 
-[node name="ScrollBox" type="ScrollContainer" parent="MainBox"]
-layout_mode = 2
+[node name="TabContainer" type="TabContainer" parent="MainBox"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="ListVersions" type="VBoxContainer" parent="MainBox/ScrollBox"]
+[node name="Versions" type="ScrollContainer" parent="MainBox/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ListVersions" type="VBoxContainer" parent="MainBox/TabContainer/Versions"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 10
+
+[node name="Projects" type="ScrollContainer" parent="MainBox/TabContainer"]
+layout_mode = 2
+
+[node name="MenuBar" type="VBoxContainer" parent="MainBox/TabContainer/Projects"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MenuBg" type="PanelContainer" parent="MainBox/TabContainer/Projects/MenuBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7xvan")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Button" type="Button" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Add project"
+
+[node name="LineEdit" type="LineEdit" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+placeholder_text = "Find project"
+
+[node name="OptionButton" type="OptionButton" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(105, 0)
+layout_mode = 2
 
 [node name="AddEngineDialog" type="Window" parent="."]
 title = "Add engine"

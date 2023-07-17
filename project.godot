@@ -40,7 +40,7 @@ version_control/autoload_on_startup=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gs_logger/plugin.cfg")
+enabled=PackedStringArray()
 
 [importer_defaults]
 

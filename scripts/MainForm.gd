@@ -11,7 +11,7 @@ const base_url = "https://downloads.tuxfamily.org/godotengine/"
 @onready var settingsenginepopup := $SettingsForEngineDialog
 @onready var regex := RegEx.new()
 @onready var verdb := VersionDatabase.new()
-@onready var listVersion := $MainBox/ScrollBox/ListVersions
+@onready var listVersion := $MainBox/TabContainer/Versions/ListVersions
 @onready var engineMenu := $MenuBox/EngineMenu
 @onready var engineIcon := $MenuBox/EngineMenu/VBoxContainer/EngineIcon
 @onready var engineName := $MenuBox/EngineMenu/VBoxContainer/EngineName
@@ -27,7 +27,7 @@ func _ready():
 	if not verdb.load_default_path() == "":
 		default_version_path = verdb.load_default_path()
 		
-	verdb.load_version_items(get_node("./MainBox/ScrollBox/ListVersions"))
+	verdb.load_version_items(get_node("./MainBox/TabContainer/Versions/ListVersions"))
 	
 	$"cat???".visible = verdb.load_cat()
 	
@@ -37,6 +37,7 @@ func _ready():
 	if listVersion.get_children() != null:
 		for item in listVersion.get_children():
 			item.button_pressed.connect(self._on_item_selected)
+			item.double_click.connect(self._on_item_start)
 
 #starts download progress of version
 func start_download_progress(version, type, platform, custom_name="Godot engine", custom_icon=ImageTexture.create_from_image(load("res://resources/logo_engines/default.png").get_image()), monosupport=false):
@@ -244,9 +245,8 @@ func _on_add_engine_pressed():
 func _exit_tree():
 	verdb.write_is_cat($"cat???".visible)
 	verdb.write_default_path(default_version_path)
-	verdb.write_version_items(get_node("./MainBox/ScrollBox/ListVersions"))
+	verdb.write_version_items(get_node("./MainBox/TabContainer/Versions/ListVersions"))
 	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.json):
-		
 		return
 	
 	verdb.save_and_close()
@@ -268,7 +268,6 @@ func _on_delete_engine_pressed():
 
 
 func _on_start_engine_pressed():
-	await get_tree().create_timer(0.01).timeout
 	var output = []
 	
 	#using threading can avoid freezing while godot project manager is working
@@ -389,3 +388,6 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	
 	ver_item.button_pressed.connect(self._on_item_selected)
 	listVersion.add_child(ver_item)	
+
+func _on_item_start():
+	_on_start_engine_pressed()

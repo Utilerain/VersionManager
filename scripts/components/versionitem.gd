@@ -3,6 +3,7 @@ extends Control
 class_name VersionItem
 
 signal button_pressed(sender: VersionItem)
+signal double_click()
 
 @export var Name: String = "Godot Engine"
 @export var Version: String = "0.0.0"
@@ -43,3 +44,7 @@ func get_json():
 		"version":Version,
 		"args":Args
 	}
+
+func _gui_input(event):
+	if event is InputEventMouseButton and event.double_click:
+		double_click.emit()

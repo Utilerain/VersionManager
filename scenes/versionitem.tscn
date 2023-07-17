@@ -50,4 +50,5 @@ layout_mode = 2
 theme = SubResource("Theme_a78os")
 text = "Version"
 
+[connection signal="gui_input" from="." to="." method="_gui_input"]
 [connection signal="pressed" from="." to="." method="_on_pressed"]
