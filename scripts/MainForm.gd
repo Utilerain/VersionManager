@@ -239,7 +239,7 @@ func _exit_tree():
 	verdb.write_is_cat($"cat???".visible)
 	verdb.write_default_path(default_version_path)
 	verdb.write_version_items(get_node("./MainBox/TabContainer/Versions/ListVersions"))
-	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.json):
+	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.settings_json):
 		return
 	
 	verdb.save_and_close()
@@ -253,7 +253,7 @@ func _on_delete_engine_pressed():
 		if "mono" in sender_item.Version:
 			temp.remove_at(len(temp)-1)
 		
-		delete_directory("/".join(temp))
+		V_utils.delete_directory("/".join(temp))
 	
 	listVersion.remove_child(sender_item)
 	engineMenu.visible = false
@@ -312,30 +312,6 @@ func _on_cat_toggled(_button_pressed):
 func _on_about_pressed():
 	aboutpopup.show()
 
-#uses for deleting engine
-func delete_directory(path: String) -> void:
-	var dir = DirAccess.open(path)
-	
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			
-			var file_path = path + "/" + file_name
-			
-			if dir.current_is_dir():
-				delete_directory(file_path)
-			
-			else:
-				dir.remove(file_path)
-			
-			file_name = dir.get_next()
-		
-		dir = null
-		DirAccess.remove_absolute(path)
-		return
-	
-
 
 func _on_settingsengine_pressed():
 	settingsenginepopup.show()
@@ -370,7 +346,6 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	if count > 0:
 		custom_name += "(%s)" % count
 	
-	
 	if monosupport:
 		mono = "_mono"
 	
@@ -380,7 +355,7 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	ver_item.Version = version + type + mono + ".custom_build"
 	
 	ver_item.button_pressed.connect(self._on_item_selected)
-	listVersion.add_child(ver_item)	
+	listVersion.add_child(ver_item)
 
 func _on_item_start():
 	_on_start_engine_pressed()

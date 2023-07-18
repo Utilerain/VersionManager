@@ -21,10 +21,6 @@ config/icon="res://icon.svg"
 config/low_processor_mode=true
 config/size/resizable=true
 
-[autoload]
-
-Logger="*res://addons/gs_logger/logger.gd"
-
 [display]
 
 window/vsync/vsync_mode=0

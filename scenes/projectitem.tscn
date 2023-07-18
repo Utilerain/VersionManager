@@ -1,0 +1,83 @@
+[gd_scene load_steps=5 format=3 uid="uid://5gxurt78ma76"]
+
+[ext_resource type="Script" path="res://scripts/components/projectitem.gd" id="1_a6ft5"]
+[ext_resource type="Texture2D" uid="uid://b1t5hw75jscbx" path="res://resources/logo_engines/default.png" id="2_xb4i0"]
+[ext_resource type="FontFile" uid="uid://bkjq1viggpkm0" path="res://fonts/Roboto/Roboto-Light.ttf" id="3_cwhv0"]
+
+[sub_resource type="Theme" id="Theme_a78os"]
+Label/font_sizes/font_size = 14
+Label/fonts/font = ExtResource("3_cwhv0")
+
+[node name="Item" type="Button"]
+custom_minimum_size = Vector2(0, 91)
+offset_right = 622.0
+offset_bottom = 91.0
+size_flags_vertical = 2
+script = ExtResource("1_a6ft5")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_xb4i0")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="ProjectName" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Project Name"
+vertical_alignment = 1
+
+[node name="Engine" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_a78os")
+text = "engine"
+
+[node name="Path" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_cwhv0")
+theme_override_font_sizes/font_size = 13
+text = "path"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+
+[node name="Open" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+text = "Open"
+
+[node name="Settings" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+text = "Settings"
+
+[node name="Remove" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Remove"
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]

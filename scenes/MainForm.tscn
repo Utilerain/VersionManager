@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b0ma5dg84d2me"]
+[gd_scene load_steps=25 format=3 uid="uid://b0ma5dg84d2me"]
 
 [ext_resource type="FontFile" uid="uid://unjqya4f4q2p" path="res://fonts/Roboto/Roboto-Regular.ttf" id="1_dehqn"]
 [ext_resource type="Script" path="res://scripts/MainForm.gd" id="2_2tbci"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://gxhooj1odqgi" path="res://resources/icons/icons-mainform/cat-icon.png" id="6_mkvbm"]
 [ext_resource type="FontFile" uid="uid://dkwqg706hghnp" path="res://fonts/Roboto/Roboto-Bold.ttf" id="7_538qu"]
 [ext_resource type="Texture2D" uid="uid://cpd6sbpqq4scf" path="res://resources/not a cat/DONTOPENTHIS.png" id="8_5kiu5"]
+[ext_resource type="PackedScene" uid="uid://5gxurt78ma76" path="res://scenes/projectitem.tscn" id="9_qcmsf"]
 [ext_resource type="Script" path="res://scripts/AddEngineDialog.gd" id="10_1k1oa"]
 [ext_resource type="Texture2D" uid="uid://b1t5hw75jscbx" path="res://resources/logo_engines/default.png" id="10_44ldv"]
 [ext_resource type="Texture2D" uid="uid://nuldnqpldts7" path="res://resources/icons/icons-settingsdialog/folder-icon.svg" id="11_2dc4a"]
@@ -235,6 +236,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Versions" type="ScrollContainer" parent="MainBox/TabContainer"]
 visible = false
@@ -246,40 +249,53 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 10
 
-[node name="Projects" type="ScrollContainer" parent="MainBox/TabContainer"]
-layout_mode = 2
-
-[node name="MenuBar" type="VBoxContainer" parent="MainBox/TabContainer/Projects"]
+[node name="Projects" type="VBoxContainer" parent="MainBox/TabContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MenuBg" type="PanelContainer" parent="MainBox/TabContainer/Projects/MenuBar"]
+[node name="MenuBg" type="PanelContainer" parent="MainBox/TabContainer/Projects"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7xvan")
 
-[node name="MarginContainer" type="MarginContainer" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg"]
+[node name="MarginContainer" type="MarginContainer" parent="MainBox/TabContainer/Projects/MenuBg"]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Button" type="Button" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer/HBoxContainer"]
+[node name="AddProject" type="Button" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Add project"
 
-[node name="LineEdit" type="LineEdit" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer/HBoxContainer"]
+[node name="SearchProject" type="LineEdit" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
-placeholder_text = "Find project"
+placeholder_text = "Search..."
 
-[node name="OptionButton" type="OptionButton" parent="MainBox/TabContainer/Projects/MenuBar/MenuBg/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Filter:"
+
+[node name="Engines" type="OptionButton" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(105, 0)
 layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainBox/TabContainer/Projects"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListProjects" type="VBoxContainer" parent="MainBox/TabContainer/Projects/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" parent="MainBox/TabContainer/Projects/ScrollContainer/ListProjects" instance=ExtResource("9_qcmsf")]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="AddEngineDialog" type="Window" parent="."]
 title = "Add engine"

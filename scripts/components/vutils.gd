@@ -37,10 +37,34 @@ static func check_mono(body):
 	regex.compile("(\\bmono\\b)")
 	return regex.search(body.get_string_from_utf8()) == null
 
-#checks is current version selected returns an error
+#checks is selected current version returns an error
 static func check_version(version) -> Error:
 	if version == null:
 		OS.alert("You're not selected version", "Warning!")
 		return ERR_INVALID_DATA
 	return OK
+	
+
+#uses for deleting engine
+static func delete_directory(path: String) -> void:
+	var dir = DirAccess.open(path)
+	
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			
+			var file_path = path + "/" + file_name
+			
+			if dir.current_is_dir():
+				delete_directory(file_path)
+			
+			else:
+				dir.remove(file_path)
+			
+			file_name = dir.get_next()
+		
+		dir = null
+		DirAccess.remove_absolute(path)
+		return
 	
