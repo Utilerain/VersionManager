@@ -6,16 +6,19 @@ const base_url = "https://downloads.tuxfamily.org/godotengine/"
 
 @onready var addenginepopup := $AddEngineDialog
 @onready var addcustomenginepopup := $AddCustomEngineDialog
+@onready var addprojectpopup := $AddProjectDialog
 @onready var settingspopup := $SettingsDialog
 @onready var aboutpopup := $AboutDialog
 @onready var settingsenginepopup := $SettingsForEngineDialog
 @onready var regex := RegEx.new()
 @onready var verdb := VersionDatabase.new()
 @onready var listVersion := $MainBox/TabContainer/Versions/ListVersions
+@onready var listProject := $MainBox/TabContainer/Projects/ScrollContainer/ListProjects
 @onready var engineMenu := $MenuBox/EngineMenu
 @onready var engineIcon := $MenuBox/EngineMenu/VBoxContainer/EngineIcon
 @onready var engineName := $MenuBox/EngineMenu/VBoxContainer/EngineName
 @onready var addEngine := $HeadBar/BarBg/Bar/AddEngine
+@onready var opteng := $AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/OptionEngine
 
 var default_version_path: String = ProjectSettings.globalize_path("user://versions")
 var sender_item: VersionItem
@@ -36,6 +39,7 @@ func _ready():
 	#if version list isn't clear
 	if listVersion.get_children() != null:
 		for item in listVersion.get_children():
+			opteng.add_item("%s (%s)" % [item.Name, item.Version])
 			item.button_pressed.connect(self._on_item_selected)
 			item.double_click.connect(self._on_item_start)
 
@@ -101,6 +105,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 			ver_item.Version += "_mono"
 		ver_item.Icon = custom_icon
 		ver_item.button_pressed.connect(self._on_item_selected)
+		ver_item.double_click.connect(self._on_item_start)
 		listVersion.add_child(ver_item)
 		
 		filename = filename.format({
@@ -185,6 +190,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 	filename = ""
 	ver_item.disabled = false
 	addEngine.disabled = false
+	opteng.add_item("%s (%s)" % [ver_item.Name, ver_item.Version])
 
 #selects version from the list of versions
 func _on_item_selected(sender):
@@ -255,6 +261,10 @@ func _on_delete_engine_pressed():
 		
 		V_utils.delete_directory("/".join(temp))
 	
+	for idx in range(opteng.item_count):
+		if "%s (%s)" % [sender_item.Name, sender_item.Version] in opteng.get_item_text(idx):
+			opteng.remove_item(idx)
+			break
 	listVersion.remove_child(sender_item)
 	engineMenu.visible = false
 	$MenuBox/Label.visible = true
@@ -355,7 +365,23 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	ver_item.Version = version + type + mono + ".custom_build"
 	
 	ver_item.button_pressed.connect(self._on_item_selected)
+	ver_item.double_click.connect(self._on_item_start)
+	opteng.add_item("%s (%s)" % [ver_item.Name, ver_item.Version])
 	listVersion.add_child(ver_item)
+
 
 func _on_item_start():
 	_on_start_engine_pressed()
+
+
+func _on_add_project_pressed():
+	addprojectpopup.show()
+
+
+func add_project(name, icon, selected_engine, path):
+	var proj_item = load("res://scenes/projectitem.tscn").instantiate()
+	
+	proj_item.Name = name
+	proj_item.Icon = icon
+	proj_item.EngineName = opteng.get_item_text(selected_engine)
+	listProject.add_child(proj_item)
