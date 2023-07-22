@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://gxhooj1odqgi" path="res://resources/icons/icons-mainform/cat-icon.png" id="6_mkvbm"]
 [ext_resource type="FontFile" uid="uid://dkwqg706hghnp" path="res://fonts/Roboto/Roboto-Bold.ttf" id="7_538qu"]
 [ext_resource type="Texture2D" uid="uid://cpd6sbpqq4scf" path="res://resources/not a cat/DONTOPENTHIS.png" id="8_5kiu5"]
-[ext_resource type="PackedScene" uid="uid://5gxurt78ma76" path="res://scenes/projectitem.tscn" id="9_qcmsf"]
 [ext_resource type="Script" path="res://scripts/AddEngineDialog.gd" id="10_1k1oa"]
 [ext_resource type="Texture2D" uid="uid://b1t5hw75jscbx" path="res://resources/logo_engines/default.png" id="10_44ldv"]
 [ext_resource type="Texture2D" uid="uid://nuldnqpldts7" path="res://resources/icons/icons-settingsdialog/folder-icon.svg" id="11_2dc4a"]
@@ -17,6 +16,7 @@
 [ext_resource type="Script" path="res://scripts/HelpDialog.gd" id="13_ce5ff"]
 [ext_resource type="Script" path="res://scripts/SettingsForEngineDialog.gd" id="14_dkecv"]
 [ext_resource type="Script" path="res://scripts/AddCustomEngineDialog.gd" id="16_bojxu"]
+[ext_resource type="Script" path="res://scripts/AddProjectDialog.gd" id="18_xy6pk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exu33"]
 content_margin_left = 0.0
@@ -240,7 +240,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Versions" type="ScrollContainer" parent="MainBox/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="ListVersions" type="VBoxContainer" parent="MainBox/TabContainer/Versions"]
@@ -250,6 +249,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 10
 
 [node name="Projects" type="VBoxContainer" parent="MainBox/TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -292,10 +292,6 @@ size_flags_vertical = 3
 [node name="ListProjects" type="VBoxContainer" parent="MainBox/TabContainer/Projects/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="Item" parent="MainBox/TabContainer/Projects/ScrollContainer/ListProjects" instance=ExtResource("9_qcmsf")]
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="AddEngineDialog" type="Window" parent="."]
 title = "Add engine"
@@ -720,6 +716,105 @@ show_hidden_files = true
 
 [node name="Req" type="HTTPRequest" parent="AddCustomEngineDialog"]
 
+[node name="AddProjectDialog" type="Window" parent="."]
+title = "Add project"
+position = Vector2i(293, 151)
+size = Vector2i(554, 209)
+unresizable = true
+script = ExtResource("18_xy6pk")
+
+[node name="MarginContainer" type="MarginContainer" parent="AddProjectDialog"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AddProjectDialog/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AddProjectDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Project's path:"
+
+[node name="ProjectPath" type="LineEdit" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "path/to/project.godot"
+
+[node name="Folder" type="Button" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("11_2dc4a")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="AddProjectDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="icon" type="TextureRect" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+texture = ExtResource("10_44ldv")
+expand_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Project" type="Label" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Project: "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Engine" type="Label" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Engine:"
+
+[node name="OptionEngine" type="OptionButton" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="AddProjectDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer3"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_colors/font_color = Color(0.980392, 0.12549, 0, 1)
+text = "Can't find this path"
+
+[node name="AddProject" type="Button" parent="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Add project"
+
+[node name="FileDialog" type="FileDialog" parent="AddProjectDialog"]
+title = "Open a File"
+position = Vector2i(264, 152)
+size = Vector2i(799, 441)
+ok_button_text = "Открыть"
+file_mode = 0
+access = 2
+filters = PackedStringArray("project.godot")
+show_hidden_files = true
+
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
 position = Vector2i(166, 165)
@@ -739,6 +834,7 @@ show_hidden_files = true
 [connection signal="pressed" from="MenuBox/EngineMenu/VBoxContainer/Settings" to="." method="_on_settingsengine_pressed"]
 [connection signal="pressed" from="MenuBox/EngineMenu/VBoxContainer/OpenFolderEngine" to="." method="_on_open_folder_engine_pressed"]
 [connection signal="pressed" from="MenuBox/EngineMenu/VBoxContainer/DeleteEngine" to="." method="_on_delete_engine_pressed"]
+[connection signal="pressed" from="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer/AddProject" to="." method="_on_add_project_pressed"]
 [connection signal="close_requested" from="AddEngineDialog" to="AddEngineDialog" method="_on_close_requested"]
 [connection signal="pressed" from="AddEngineDialog/MarginContainer/VBoxContainer/CustomIconandCSSupportContainer/IconButton" to="AddEngineDialog" method="_on_icon_button_pressed"]
 [connection signal="toggled" from="AddEngineDialog/MarginContainer/VBoxContainer/CustomIconandCSSupportContainer/MonoSupport" to="AddEngineDialog" method="_on_mono_support_toggled"]
@@ -766,4 +862,9 @@ show_hidden_files = true
 [connection signal="pressed" from="AddCustomEngineDialog/MarginContainer/Load" to="AddCustomEngineDialog" method="_on_load_button_pressed"]
 [connection signal="file_selected" from="AddCustomEngineDialog/IconDialog" to="AddCustomEngineDialog" method="_on_icon_dialog_file_selected"]
 [connection signal="file_selected" from="AddCustomEngineDialog/FileDialog" to="AddCustomEngineDialog" method="_on_file_selected"]
+[connection signal="close_requested" from="AddProjectDialog" to="AddProjectDialog" method="_on_close_requested"]
+[connection signal="text_changed" from="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer/ProjectPath" to="AddProjectDialog" method="_on_project_path_text_changed"]
+[connection signal="pressed" from="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer/Folder" to="AddProjectDialog" method="_on_folder_pressed"]
+[connection signal="pressed" from="AddProjectDialog/MarginContainer/VBoxContainer/HBoxContainer3/AddProject" to="AddProjectDialog" method="_on_add_project_pressed"]
+[connection signal="file_selected" from="AddProjectDialog/FileDialog" to="AddProjectDialog" method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
