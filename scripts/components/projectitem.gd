@@ -3,6 +3,9 @@ extends Control
 class_name ProjectItem
 
 signal double_click(sender: ProjectItem)
+signal on_open_button(sender: ProjectItem)
+signal on_settings_button(sender: ProjectItem)
+signal on_remove_button(sender: ProjectItem)
 
 @export var Name: String = "Project"
 @export var EngineName: String = "Engine Name"
@@ -53,3 +56,15 @@ func _on_focus_entered():
 
 func _on_focus_exited():
 	$MarginContainer/HBoxContainer/HBoxContainer.visible = false
+
+
+func _on_open_pressed():
+	on_open_button.emit(self)
+
+
+func _on_settings_pressed():
+	on_settings_button.emit(self)
+
+
+func _on_remove_pressed():
+	on_remove_button.emit(self)

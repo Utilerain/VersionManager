@@ -67,18 +67,24 @@ size_flags_vertical = 4
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
+focus_mode = 0
 text = "Open"
 
 [node name="Settings" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
+focus_mode = 0
 text = "Settings"
 
 [node name="Remove" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Remove"
 
 [connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/Open" to="." method="_on_open_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/Remove" to="." method="_on_remove_pressed"]

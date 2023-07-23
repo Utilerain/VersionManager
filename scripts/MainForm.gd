@@ -41,7 +41,14 @@ func _ready():
 		for item in listVersion.get_children():
 			opteng.add_item("%s (%s)" % [item.Name, item.Version])
 			item.button_pressed.connect(self._on_item_selected)
-			item.double_click.connect(self._on_item_start)
+			item.double_click.connect(self._on_veritem_start)
+	
+	if listProject.get_children() != null:
+		for item in listProject.get_children():
+			item.double_click.connect(self._on_projitem_start)
+			item.on_open_button.connect(self._on_projitem_open_button)
+			item.on_settings_button.connect(self._on_projitem_settings_button)
+			item.on_remove_button.connect(self._on_projitem_remove_button)
 
 #starts download progress of version
 func start_download_progress(version, type, platform, custom_name="Godot engine", custom_icon=ImageTexture.create_from_image(load("res://resources/logo_engines/default.png").get_image()), monosupport=false):
@@ -105,7 +112,7 @@ func start_download_progress(version, type, platform, custom_name="Godot engine"
 			ver_item.Version += "_mono"
 		ver_item.Icon = custom_icon
 		ver_item.button_pressed.connect(self._on_item_selected)
-		ver_item.double_click.connect(self._on_item_start)
+		ver_item.double_click.connect(self._on_veritem_start)
 		listVersion.add_child(ver_item)
 		
 		filename = filename.format({
@@ -365,12 +372,12 @@ func load_custom_build(version, type, path, custom_name="Godot engine custom", c
 	ver_item.Version = version + type + mono + ".custom_build"
 	
 	ver_item.button_pressed.connect(self._on_item_selected)
-	ver_item.double_click.connect(self._on_item_start)
+	ver_item.double_click.connect(self._on_veritem_start)
 	opteng.add_item("%s (%s)" % [ver_item.Name, ver_item.Version])
 	listVersion.add_child(ver_item)
 
 
-func _on_item_start():
+func _on_veritem_start():
 	_on_start_engine_pressed()
 
 
@@ -383,5 +390,59 @@ func add_project(name, icon, selected_engine, path):
 	
 	proj_item.Name = name
 	proj_item.Icon = icon
+	proj_item.Path = path
 	proj_item.EngineName = opteng.get_item_text(selected_engine)
+	proj_item.double_click.connect(self._on_projitem_start)
+	proj_item.on_open_button.connect(self._on_projitem_open_button)
+	proj_item.on_settings_button.connect(self._on_projitem_settings_button)
+	proj_item.on_remove_button.connect(self._on_projitem_remove_button)
 	listProject.add_child(proj_item)
+
+
+func _on_projitem_start(sender):
+	var output = []
+	var args = []
+	
+	#using threading can avoid freezing while godot project manager is working
+	var thread = Thread.new()
+	var engitem = get_engine(sender.EngineName) 
+	
+	args.append(sender.Path)
+	args.append_array(engitem.Args.split(" "))
+	
+	thread.start(OS.execute.bind(engitem.Path, args, output))
+	
+	while thread.is_alive():
+		await get_tree().process_frame
+		
+	thread.wait_to_finish()
+	thread = null
+
+
+func get_engine(text):
+	var idx = -90
+	var engpath = ""
+	
+	for i in opteng.item_count:
+		if text in opteng.get_item_text(i):
+			idx = i
+	
+	if idx == -90:
+		return ERR_DOES_NOT_EXIST
+		
+	for item in listVersion.get_children():
+		if "%s (%s)" % [item.Name, item.Version] in opteng.get_item_text(idx):
+			return item
+
+
+func _on_projitem_open_button(sender):
+	_on_projitem_start(sender)
+
+
+func _on_projitem_settings_button(sender):
+	pass
+
+
+func _on_projitem_remove_button(sender):
+	print("event remove")
+	listProject.remove_child(sender)
