@@ -410,6 +410,10 @@ func _on_projitem_start(sender):
 	var thread = Thread.new()
 	var engitem = get_engine(sender.EngineName) 
 	
+	if engitem == ERR_DOES_NOT_EXIST:
+		OS.alert("Can't find this engine. Is it removed?", "Error!")
+		return
+	
 	args.append(sender.Path)
 	args.append_array(engitem.Args.split(" "))
 	
@@ -452,5 +456,6 @@ func _on_projitem_remove_button(sender):
 
 func _on_search_project_text_changed(new_text: String):
 	for item in listProject.get_children():
-		item.visible = new_text.to_lower() in item.Name.to_lower() and not new_text.length() == -1
-		
+		item.visible = (new_text.to_lower() in item.Name.to_lower())
+		if new_text.is_empty():
+			item.visible = true

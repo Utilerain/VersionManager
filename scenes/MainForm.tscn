@@ -275,6 +275,7 @@ text = "Add project"
 [node name="SearchProject" type="LineEdit" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Search..."
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainBox/TabContainer/Projects"]
