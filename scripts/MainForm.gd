@@ -452,5 +452,5 @@ func _on_projitem_remove_button(sender):
 
 func _on_search_project_text_changed(new_text: String):
 	for item in listProject.get_children():
-		item.visible = item.Name.to_lower().begins_with(new_text) and not new_text.length() == -1
+		item.visible = item.Name.to_lower().begins_with(new_text.to_lower()) and not new_text.length() == -1
 		
