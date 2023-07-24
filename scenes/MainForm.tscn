@@ -720,6 +720,7 @@ show_hidden_files = true
 title = "Add project"
 position = Vector2i(293, 151)
 size = Vector2i(554, 209)
+visible = false
 unresizable = true
 script = ExtResource("18_xy6pk")
 

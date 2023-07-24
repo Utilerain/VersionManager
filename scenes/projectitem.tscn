@@ -71,6 +71,7 @@ focus_mode = 0
 text = "Open"
 
 [node name="Settings" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4

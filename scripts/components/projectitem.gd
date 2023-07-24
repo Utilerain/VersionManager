@@ -37,9 +37,10 @@ func _process(_delta):
 
 #gets JSON (dictionary) for projects.json
 func get_json():
+	var projectutil = ProjectUtil.new(Path)
 	return {
 		"name":Name,
-		"icon":Icon,
+		"icon":projectutil.get_icon_path(),
 		"path":Path,
 		"engine_name":EngineName,
 	}

@@ -444,5 +444,4 @@ func _on_projitem_settings_button(sender):
 
 
 func _on_projitem_remove_button(sender):
-	print("event remove")
 	listProject.remove_child(sender)
