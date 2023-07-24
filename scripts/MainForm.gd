@@ -31,6 +31,7 @@ func _ready():
 		default_version_path = verdb.load_default_path()
 		
 	verdb.load_version_items(get_node("./MainBox/TabContainer/Versions/ListVersions"))
+	verdb.load_project_items(get_node("./MainBox/TabContainer/Projects/ScrollContainer/ListProjects"))
 	
 	$"cat???".visible = verdb.load_cat()
 	
@@ -252,7 +253,9 @@ func _exit_tree():
 	verdb.write_is_cat($"cat???".visible)
 	verdb.write_default_path(default_version_path)
 	verdb.write_version_items(get_node("./MainBox/TabContainer/Versions/ListVersions"))
-	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.settings_json):
+	verdb.write_project_items(get_node("./MainBox/TabContainer/Projects/ScrollContainer/ListProjects"))
+	
+	if FileAccess.open("user://settings.json", FileAccess.READ).get_as_text() == str(verdb.settings_json) and FileAccess.open("user://projects.json", FileAccess.READ).get_as_text() == str(verdb.projects_json):
 		return
 	
 	verdb.save_and_close()
@@ -445,3 +448,9 @@ func _on_projitem_settings_button(sender):
 
 func _on_projitem_remove_button(sender):
 	listProject.remove_child(sender)
+
+
+func _on_search_project_text_changed(new_text: String):
+	for item in listProject.get_children():
+		item.visible = item.Name.to_lower().begins_with(new_text) and not new_text.length() == -1
+		

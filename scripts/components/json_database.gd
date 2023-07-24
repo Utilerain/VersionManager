@@ -30,6 +30,9 @@ func _init():
 	
 	if file.get_as_text() == "":
 		file.store_string(str(settings_json))
+	
+	if projfile.get_as_text() == "":
+		projfile.store_string(str(projects_json))
 
 
 func write_version_items(list_versions: Object):
@@ -71,7 +74,7 @@ func load_version_items(list_versions: Object):
 
 
 func load_project_items(list_projects: Object):
-	for json_item in JSON.parse_string(file.get_as_text())["projects"]:
+	for json_item in JSON.parse_string(projfile.get_as_text())["projects"]:
 		
 		var project_item = load("res://scenes/projectitem.tscn").instantiate()
 		

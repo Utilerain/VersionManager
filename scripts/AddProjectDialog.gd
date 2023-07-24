@@ -39,4 +39,4 @@ func _on_add_project_pressed():
 	var mainform = get_node("/root/MainForm")
 	hide()
 	
-	mainform.add_project(projectname.text, projecticon.texture, optengine.selected, projectpath.text)
+	mainform.add_project(projectutil.get_name(), projecticon.texture, optengine.selected, projectpath.text)

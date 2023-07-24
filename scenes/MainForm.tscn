@@ -240,6 +240,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Versions" type="ScrollContainer" parent="MainBox/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="ListVersions" type="VBoxContainer" parent="MainBox/TabContainer/Versions"]
@@ -249,7 +250,6 @@ size_flags_vertical = 0
 theme_override_constants/separation = 10
 
 [node name="Projects" type="VBoxContainer" parent="MainBox/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -276,14 +276,6 @@ text = "Add project"
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 placeholder_text = "Search..."
-
-[node name="Label" type="Label" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "Filter:"
-
-[node name="Engines" type="OptionButton" parent="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(105, 0)
-layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainBox/TabContainer/Projects"]
 layout_mode = 2
@@ -836,6 +828,7 @@ show_hidden_files = true
 [connection signal="pressed" from="MenuBox/EngineMenu/VBoxContainer/OpenFolderEngine" to="." method="_on_open_folder_engine_pressed"]
 [connection signal="pressed" from="MenuBox/EngineMenu/VBoxContainer/DeleteEngine" to="." method="_on_delete_engine_pressed"]
 [connection signal="pressed" from="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer/AddProject" to="." method="_on_add_project_pressed"]
+[connection signal="text_changed" from="MainBox/TabContainer/Projects/MenuBg/MarginContainer/HBoxContainer/SearchProject" to="." method="_on_search_project_text_changed"]
 [connection signal="close_requested" from="AddEngineDialog" to="AddEngineDialog" method="_on_close_requested"]
 [connection signal="pressed" from="AddEngineDialog/MarginContainer/VBoxContainer/CustomIconandCSSupportContainer/IconButton" to="AddEngineDialog" method="_on_icon_button_pressed"]
 [connection signal="toggled" from="AddEngineDialog/MarginContainer/VBoxContainer/CustomIconandCSSupportContainer/MonoSupport" to="AddEngineDialog" method="_on_mono_support_toggled"]
